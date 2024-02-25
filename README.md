@@ -1,10 +1,10 @@
 # nez_artificiel
-Création d'un petit nez artificiel lowcost pour sentir pleins de trucs intéressants ;-)
+Création d'un petit nez artificiel low cost pour sentir pleins de trucs intéressants ;-)
 zf240225.1548
 
 
 ## Buts
-Création d'un petit nez artificiel lowcost pour sentir pleins de trucs intéressants comme par exemple des états de fermentations.
+Création d'un petit nez artificiel low cost pour sentir pleins de trucs intéressants comme par exemple des états de fermentations.
 
 Dans un premier temps on va commencer simple et voir si on arrive à mesurer l'état de cuisson des oignons dans une poêle !<br>
 Car c'est un moyen facile et surtout rapide de créer beaucoup de données avec cinq états pour la machine learning:
