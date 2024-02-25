@@ -75,44 +75,34 @@ void loop() {
     // val = gas.getGM702B(); USBSerial.print("GM702B: "); USBSerial.print(val); USBSerial.print("  =  ");
     // USBSerial.print(gas.calcVol(val)); USBSerial.println("V");
 
-    USBSerial.println("");
+    // USBSerial.println("");
 
 
-    val = gas.measure_NO2(); Serial.print("NO2: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-    val = gas.measure_C2H5OH(); Serial.print("C2H5OH: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-    val = gas.measure_VOC(); Serial.print("VOC: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-    val = gas.measure_CO(); Serial.print("CO: "); Serial.print(val); Serial.print("  =  ");
-    Serial.print(gas.calcVol(val)); Serial.println("V");
-
-
-    // val = gas.getGM102B(); 
-    // USBSerial.print("GM102B: "); 
-    // USBSerial.print(val); 
-    // USBSerial.print("  =  ");
+    val = gas.measure_NO2(); 
+    USBSerial.print("NO2:"); 
+    USBSerial.print(val); 
+    USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    // val = gas.getGM302B(); 
-    // USBSerial.print("GM302B: "); 
-    // USBSerial.print(val); 
-    // USBSerial.print("  =  ");
+    val = gas.measure_C2H5OH(); 
+    USBSerial.print("C2H5OH:"); 
+    USBSerial.print(val); 
+    USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    // val = gas.getGM502B(); 
-    // USBSerial.print("GM502B: "); 
-    // USBSerial.print(val); 
-    // USBSerial.print("  =  ");
+    val = gas.measure_VOC(); 
+    USBSerial.print("VOC:"); 
+    USBSerial.print(val); 
+    USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    // val = gas.getGM702B(); 
-    // USBSerial.print("GM702B: "); 
-    // USBSerial.print(val); 
-    // USBSerial.print("  =  ");
+    val = gas.measure_CO(); 
+    USBSerial.print("CO:"); 
+    USBSerial.print(val); 
+    USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
