@@ -1,7 +1,7 @@
 # nez_artificiel
 Création d'un petit nez artificiel *low cost* pour sentir pleins de trucs intéressants ;-)
 
-zf240225.2011
+zf240225.2043
 
 
 ## Buts
@@ -27,45 +27,75 @@ Mais comme je n'ai pas envie d'être connecté en permanence à Internet pour av
 
 ## Moyens
 ### Senseurs de gaz
+J'ai utilisé le **sensor multichannel gas V2** de Seestudio:
 
-xxx
+https://wiki.seeedstudio.com/Grove-Multichannel-Gas-Sensor-V2/
+
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/sensor_multichannels.jpg)
+
+
+Il est vraiment tout petit et le ventilateur est aussi mignon.<br>
+Il ne coûte pas trop cher, environ 25CHF !
+
+Senseur de gas:<br>
+https://www.reichelt.com/ch/fr/arduino-capteur-de-gaz-multicanal-grove-v2-grv-gas-sens-v2-p328573.html
+
+Ventilateur:<br>
+https://www.reichelt.com/ch/fr/raspberry-pi-ventilateur-double-rpi-fan-dual-p223618.html?&trstct=pos_1&nbc=1
 
 
 ### Microcontrôleur
+J'ai utilisé pour ce projet le nouveau mini ESP32-C3 de Lolin:
 
-xxx
+https://www.wemos.cc/en/latest/c3/c3_mini.html
+
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/mini_esp32_c3.png)
+
+Il est petit mais très puissant (CPU RISCV) et pas cher < 4CHF:
+
+https://www.aliexpress.com/item/1005004740051202.html
+
 
 
 ### Machine Learning
+Comme je veux faire de l'IA *embarquée* je vais utiliser la bibliothèque **TensorFlow Lite TinyML for ESP32** !
 
-xxx
+https://eloquentarduino.com/posts/tensorflow-lite-tinyml-esp32
+
+Mais avant je dois encore lire cet excellent livre sur tinyML:
+
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/livre_tinyml.png)
+
+Avec ce livre, l'IA est démystifiée !
+
+https://books.google.ch/books?id=tn3EDwAAQBAJ&printsec=copyright&redir_esc=y#v=onepage&q&f=false
 
 
 ## Résultats du tout 1er prototype
 Premier prototype hyper low cost. Le senseur multicanaux et le ventilateur sont *emballés* dans une gaine thermo qui fait office de tunnel d'aspiration. C'est vraiment tout petit !
 
 
-![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/e0519e70b1876770430d03c34a8e4636a138b34e/images/nez_artificiel_proto1.jpg)
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/nez_artificiel_proto1.jpg)
 
 Détail du proto nez low cost
 
-![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/e0519e70b1876770430d03c34a8e4636a138b34e/images/nez_artificiel_proto2.jpg)
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/nez_artificiel_proto2.jpg)
 
-![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/e0519e70b1876770430d03c34a8e4636a138b34e/images/nez_artificiel_proto3.jpg)
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/nez_artificiel_proto3.jpg)
 
 Pannels de tests, trois *senteurs*, pour *voir* leur *signature* sur un graphique
 
-![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/e0519e70b1876770430d03c34a8e4636a138b34e/images/trois_senteurs.jpg)
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/trois_senteurs.jpg)
 
 Graphique des *signatures* des *trois senteurs*
 
-![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/e0519e70b1876770430d03c34a8e4636a138b34e/images/signature_cafe_alcool1.png)
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/signature_cafe_alcool1.png)
 
 Mais les mesures ont été faites beaucoup trop rapidement et surtout les trois verres étaient côte à côte. Dans la pièce on *sentait* l'odeur du café au whisky ;-)
 
 Ces 4 gaz ont été mesuré
 
-![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/e0519e70b1876770430d03c34a8e4636a138b34e/images/4_gaz_mesures.png)
+![](https://raw.githubusercontent.com/zuzu59/nez_artificiel/master/images/4_gaz_mesures.png)
 
 
 
@@ -73,6 +103,10 @@ Ces 4 gaz ont été mesuré
 
 
 ## Sources
+https://wiki.seeedstudio.com/Grove-Multichannel-Gas-Sensor-V2/
+
+https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background_gas_name/demo_background_gas_name.ino
+
 
 
 
