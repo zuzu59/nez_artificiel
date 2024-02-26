@@ -1,38 +1,17 @@
 // Création d'un petit nez artificiel lowcost pour sentir plus de trucs intéressants ;-)
-// zf240225.1545
+// Graphe les senseurs sur le display du smartphone avec DumbDisplay
+// zf240226.1256
 //
 // Sources:
 // https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background/demo_background.ino
-// https://github.com/Testato/SoftwareWire/blob/master/examples/Small_example/Small_example.ino
+// https://github.com/trevorwslee/Arduino-DumbDisplay/blob/master/samples/esp32c3ddblink/esp32c3ddblink.ino
+// https://github.com/trevorwslee/Arduino-DumbDisplay/blob/master/projects/servo/servo.ino
+// https://github.com/trevorwslee/Arduino-DumbDisplay
+// https://trevorwslee.github.io/ArduinoDumbDisplay/html/class_plotter_d_d_layer.html
 
 
-/*
-    Multichannel_gas_sensor_V2.0.ino
-    Description: A terminal for Seeed Grove Multichannel gas sensor V2.0.
-    2019 Copyright (c) Seeed Technology Inc.  All right reserved.
-    Author: Hongtai Liu(lht856@foxmail.com)
-    2019-9-29
-
-    The MIT License (MIT)
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.1  USA
-*/
-
+// Sensor multichannel gas
 #include <Multichannel_Gas_GMXXX.h>
-
 // if you use the software I2C to drive the sensor, you can uncommnet the define SOFTWAREWIRE which in Multichannel_Gas_GMXXX.h.
 #ifdef SOFTWAREWIRE
     #include <SoftwareWire.h>
@@ -43,6 +22,50 @@
     GAS_GMXXX<TwoWire> gas;
 #endif
 
+
+// DumbDisplay library
+#include "esp32bledumbdisplay.h"
+// - use ESP32 BLE with name "ESP32C3"
+// - at the same time, enable Serial connection with 115200 baud 
+DumbDisplay dumbdisplay(new DDBLESerialIO("ESP32C3_NEZ", true, 115200));
+
+PlotterDDLayer* pPlotter;
+// GraphicalDDLayer *graphical;
+
+
+void setup_DD() {
+  // record the setup layer commands so that DumbDisplay app can re-connected
+  // dumbdisplay.recordLayerSetupCommands();
+
+  // create a plotter layer that shows the angle, and for more fun, sin and cos of the angle
+  pPlotter = dumbdisplay.createPlotterLayer(300, 150);
+  pPlotter->padding(10);
+  // pPlotter->opacity(100);
+  pPlotter->opacity(25);
+  pPlotter->noBackgroundColor();
+  // pPlotter->backgroundColor("red");
+  pPlotter->label("Sensor multichannel");
+
+
+  // // create a graphical [LCD] layer
+  // GraphicalDDLayer *graphical = dumbdisplay.createGraphicalLayer(150, 300);
+  // graphical->backgroundColor("lightgray");
+  // graphical->setTextColor("blue");
+  // graphical->setTextFont();
+  // graphical->println("REGULAR:");
+
+
+  
+  } 
+
+// will be called last in the loop block
+void loop_DDPostProcess() {
+  // give DumbDisplay library a change to do it's work
+  DDYield();
+}
+
+
+
 static uint8_t recv_cmd[8] = {};
 
 void setup() {
@@ -50,6 +73,9 @@ void setup() {
     delay(3000);  //le temps de passer sur la Serial Monitor ;-)
     USBSerial.println("\n\n\n\nCa commence !\n");
     delay(2000);  //le temps de passer sur la Serial Monitor ;-)
+    
+    setup_DD();
+    // loop_DDPostProcess();
 
     Wire.begin(4, 5);     // J'ai branché mon sensor sur les pins 4 et 5 de mon esp32c3 !
     // If you have changed the I2C address of gas sensor, you must to be specify the address of I2C.
@@ -57,7 +83,6 @@ void setup() {
     gas.begin(Wire, 0x08); // use the hardware I2C
     //gas.begin(MyWire, 0x08); // use the software I2C
     //gas.setAddress(0x64); change thee I2C address
-
 }
 
 void loop() {
@@ -65,49 +90,48 @@ void loop() {
     uint8_t addr = 0;
     uint8_t i;
     uint32_t val = 0;
+    int NO2 = 0;
+    int C2H5OH = 0;
+    int VOC = 0;
+    int CO = 0;
 
-    // val = gas.getGM102B(); USBSerial.print("GM102B: "); USBSerial.print(val); USBSerial.print("  =  ");
-    // USBSerial.print(gas.calcVol(val)); USBSerial.println("V");
-    // val = gas.getGM302B(); USBSerial.print("GM302B: "); USBSerial.print(val); USBSerial.print("  =  ");
-    // USBSerial.print(gas.calcVol(val)); USBSerial.println("V");
-    // val = gas.getGM502B(); USBSerial.print("GM502B: "); USBSerial.print(val); USBSerial.print("  =  ");
-    // USBSerial.print(gas.calcVol(val)); USBSerial.println("V");
-    // val = gas.getGM702B(); USBSerial.print("GM702B: "); USBSerial.print(val); USBSerial.print("  =  ");
-    // USBSerial.print(gas.calcVol(val)); USBSerial.println("V");
-
-    // USBSerial.println("");
-
-
-    val = gas.measure_NO2(); 
+    NO2 = gas.measure_NO2(); 
     USBSerial.print("NO2:"); 
-    USBSerial.print(val); 
+    USBSerial.print(NO2); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    val = gas.measure_C2H5OH(); 
+    C2H5OH = gas.measure_C2H5OH(); 
     USBSerial.print("C2H5OH:"); 
-    USBSerial.print(val); 
+    USBSerial.print(C2H5OH); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    val = gas.measure_VOC(); 
+    VOC = gas.measure_VOC(); 
     USBSerial.print("VOC:"); 
-    USBSerial.print(val); 
+    USBSerial.print(VOC); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    val = gas.measure_CO(); 
+    CO = gas.measure_CO(); 
     USBSerial.print("CO:"); 
-    USBSerial.print(val); 
+    USBSerial.print(CO); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
     USBSerial.println("");
-    delay(2000);
+
+    pPlotter->set("NO2", NO2, "C2H5OH", C2H5OH, "VOC", VOC, "CO", CO);
+
+    // graphical->println("NOW:");
+
+    // loop_DDPostProcess();
+
+    delay(1000);
 }
 
 
