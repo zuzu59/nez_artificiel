@@ -1,7 +1,7 @@
 # nez_artificiel
 Création d'un petit nez artificiel *low cost* pour sentir pleins de trucs intéressants ;-)
 
-zf240225.2043
+zf240225.1234
 
 
 ## Buts
@@ -69,6 +69,27 @@ Mais avant je dois encore lire cet excellent livre sur tinyML:
 Avec ce livre, l'IA est démystifiée !
 
 https://books.google.ch/books?id=tn3EDwAAQBAJ&printsec=copyright&redir_esc=y#v=onepage&q&f=false
+
+
+## Les différents exemples de ce projet
+### esp32c3_serial_plot1
+Lecture, avec un mini esp32-c3, du senseur multicanaux et le graphe sur le *Serial Plotter Tool* de l'ARDUINO IDE. C'est cette exemple qui a permit d'avoir le résultat du tout 1er prototype
+
+https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-serial-plotter/
+
+
+### esp32c3_ddplotter1
+Lecture, avec un mini esp32-c3, du senseur multicanaux et le graphe sur le smartphone à l'aide de la lib *PlotterDDLayer* de DumbDisplay
+
+https://github.com/trevorwslee/Arduino-DumbDisplay
+
+https://trevorwslee.github.io/ArduinoDumbDisplay/html/class_plotter_d_d_layer.html
+
+
+### esp32c3_serial_learning1
+Lecture, avec un mini esp32-c3, du senseur multicanaux et formate la sortie série pour pouvoir l'utiliser avec Edge Impulse pour l'apprentissage de la machine learning
+
+https://docs.edgeimpulse.com/docs/tools/edge-impulse-cli/cli-daemon
 
 
 ## Résultats du tout 1er prototype
