@@ -1,6 +1,6 @@
 // Création d'un petit nez artificiel lowcost pour sentir plus de trucs intéressants ;-)
 // Graphe les senseurs sur le display du smartphone avec DumbDisplay
-// zf240226.1256
+// zf240226.1850
 //
 // Sources:
 // https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background/demo_background.ino
@@ -29,8 +29,9 @@
 // - at the same time, enable Serial connection with 115200 baud 
 DumbDisplay dumbdisplay(new DDBLESerialIO("ESP32C3_NEZ", true, 115200));
 
-PlotterDDLayer* pPlotter;
+PlotterDDLayer *pPlotter;
 // GraphicalDDLayer *graphical;
+LcdDDLayer *lcd;
 
 
 void setup_DD() {
@@ -38,21 +39,35 @@ void setup_DD() {
   // dumbdisplay.recordLayerSetupCommands();
 
   // create a plotter layer that shows the angle, and for more fun, sin and cos of the angle
-  pPlotter = dumbdisplay.createPlotterLayer(300, 150);
+  pPlotter = dumbdisplay.createPlotterLayer(1000, 500);
   pPlotter->padding(10);
-  // pPlotter->opacity(100);
-  pPlotter->opacity(25);
+  pPlotter->opacity(100);
+  // pPlotter->opacity(25);
   pPlotter->noBackgroundColor();
   // pPlotter->backgroundColor("red");
   pPlotter->label("Sensor multichannel");
 
 
   // // create a graphical [LCD] layer
-  // GraphicalDDLayer *graphical = dumbdisplay.createGraphicalLayer(150, 300);
+  // graphical = dumbdisplay.createGraphicalLayer(1500, 200);
   // graphical->backgroundColor("lightgray");
   // graphical->setTextColor("blue");
-  // graphical->setTextFont();
-  // graphical->println("REGULAR:");
+  // // graphical->setTextFont();
+  // graphical->setTextSize(50);
+  // // graphical->println("REGULAR:");
+
+  // create a LCD layers with x rows of y characters
+  lcd = dumbdisplay.createLcdLayer(20, 2);
+    // set LCD colors and print out something
+  lcd->pixelColor("black");
+  lcd->bgPixelColor("lightgray");
+  lcd->backgroundColor("lightgray");
+  // lcd->print("hello world");  
+  // lcd->setCursor(0, 1);
+  // lcd->print("how are you?");
+
+  // "auto pin" the layers vertically
+  dumbdisplay.configAutoPin(DD_AP_VERT);
 
 
   
@@ -94,6 +109,7 @@ void loop() {
     int C2H5OH = 0;
     int VOC = 0;
     int CO = 0;
+    String zString = "";
 
     NO2 = gas.measure_NO2(); 
     USBSerial.print("NO2:"); 
@@ -127,11 +143,29 @@ void loop() {
 
     pPlotter->set("NO2", NO2, "C2H5OH", C2H5OH, "VOC", VOC, "CO", CO);
 
-    // graphical->println("NOW:");
+    // graphical->clear();
+    // graphical->setCursor(0, 0);
+
+    zString = "NO2:" + String(NO2) + "  EtOH:" + String(C2H5OH)      ;
+    lcd->setCursor(0, 0);
+    lcd->print(zString);
+
+    zString = "VOC:" + String(VOC) + "  CO:" + String(CO)      ;
+    lcd->setCursor(0, 1);
+    lcd->print(zString);
+
+
+
+
+
+    // graphical->println(zString);
+
+
+
 
     // loop_DDPostProcess();
 
-    delay(1000);
+    delay(300);
 }
 
 
