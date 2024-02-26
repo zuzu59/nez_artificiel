@@ -1,7 +1,7 @@
 # nez_artificiel
 Création d'un petit nez artificiel *low cost* pour sentir pleins de trucs intéressants ;-)
 
-zf240225.1234
+zf240226.1240
 
 
 ## Buts
@@ -79,6 +79,8 @@ https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-serial-plotter/
 
 
 ### esp32c3_ddplotter1
+**---------------- ne fonctionne pas encore ! ----------------**
+
 Lecture, avec un mini esp32-c3, du senseur multicanaux et le graphe sur le smartphone à l'aide de la lib *PlotterDDLayer* de DumbDisplay
 
 https://github.com/trevorwslee/Arduino-DumbDisplay
@@ -87,6 +89,8 @@ https://trevorwslee.github.io/ArduinoDumbDisplay/html/class_plotter_d_d_layer.ht
 
 
 ### esp32c3_serial_learning1
+**---------------- ne fonctionne pas encore ! ----------------**
+
 Lecture, avec un mini esp32-c3, du senseur multicanaux et formate la sortie série pour pouvoir l'utiliser avec Edge Impulse pour l'apprentissage de la machine learning
 
 https://docs.edgeimpulse.com/docs/tools/edge-impulse-cli/cli-daemon
