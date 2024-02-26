@@ -1,6 +1,6 @@
 // Création d'un petit nez artificiel lowcost pour sentir plus de trucs intéressants ;-)
 // Graphe tout simplement sur le serial plotter tool de l'Arduino IDE
-// zf240226.1256
+// zf240226.1918
 //
 // Sources:
 // https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background/demo_background.ino
@@ -41,30 +41,30 @@ void loop() {
     uint8_t i;
     uint32_t val = 0;
 
-    val = gas.measure_NO2(); 
+    NO2 = gas.measure_NO2(); 
     USBSerial.print("NO2:"); 
-    USBSerial.print(val); 
+    USBSerial.print(NO2); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    val = gas.measure_C2H5OH(); 
+    C2H5OH = gas.measure_C2H5OH(); 
     USBSerial.print("C2H5OH:"); 
-    USBSerial.print(val); 
+    USBSerial.print(C2H5OH); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    val = gas.measure_VOC(); 
+    VOC = gas.measure_VOC(); 
     USBSerial.print("VOC:"); 
-    USBSerial.print(val); 
+    USBSerial.print(VOC); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
 
-    val = gas.measure_CO(); 
+    CO = gas.measure_CO(); 
     USBSerial.print("CO:"); 
-    USBSerial.print(val); 
+    USBSerial.print(CO); 
     USBSerial.print(",");
     // USBSerial.print(gas.calcVol(val)); 
     // USBSerial.println("V");
