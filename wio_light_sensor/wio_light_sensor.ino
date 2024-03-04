@@ -1,5 +1,7 @@
 // Affiche simplement le graphe du senseur de lumière qui se trouve au dos du WIO
-// zf240304.1943
+// c'est un très bon exemple de comment afficher une seule mesures sur le graphe
+
+// zf240304.2004
 //
 // ATTENTION: il ne faut PAS utiliser la lib 1.0.0 qui se trouve sur le site de Seed Studio
 // mais la version 1.1.0 qui sur trouve sur Github:
@@ -12,7 +14,7 @@
 // Manual de la lib: https://wiki.seeedstudio.com/Wio-Terminal-LCD-Linecharts/
 
 
-#include "seeed_line_chart.h" //include the library
+#include "seeed_line_chart.h" //include the library   https://github.com/Seeed-Studio/Seeed_Arduino_Linechart
 TFT_eSPI tft;
 
 #define MAX_SIZE 50 // maximum size of data
