@@ -1,6 +1,6 @@
 // Juste un test pour voir comment se connecter en WIFI avec un esp32-c3
 // et au passage Graphe tout simplement sur le serial plotter tool de l'Arduino IDE
-// zf240311.1432
+// zf240311.1546
 //
 // Sources:
 // https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background/demo_background.ino
@@ -21,13 +21,15 @@ static void ConnectWiFi() {
     USBSerial.printf("WIFI_SSID: %s\nWIFI_PASSWORD: %s\n", WIFI_SSID, WIFI_PASSWORD);
     WiFi.mode(WIFI_STA); //Optional
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    WiFi.setSleep(false);
     USBSerial.println("\nConnecting");
     while(WiFi.status() != WL_CONNECTED){
         USBSerial.print(".");
         delay(100);
     }
     USBSerial.println("\nConnected to the WiFi network");
-    USBSerial.printf("Local ESP32 IP: %s\n\n", WiFi.localIP());
+    USBSerial.print("Local ESP32 IP: ");
+    USBSerial.println(WiFi.localIP());
 }
 
 static void Setting_Gaz_Sensor() {
@@ -45,7 +47,10 @@ void setup() {
     USBSerial.println("\n\n\n\nCa commence !\n");
     delay(2000);  //le temps de passer sur la Serial Monitor ;-)
 
+    USBSerial.println("\n\nConnect WIFI !\n");
     ConnectWiFi();
+
+    USBSerial.println("\n\n\n\nSetting gaz sensor !\n");
     Setting_Gaz_Sensor();
 }
 
@@ -56,8 +61,8 @@ void loop() {
     int CO = gas.measure_CO(); 
 
     // Plot sur le serial plotter de l'Arduino IDE
-    USBSerial.printf("NO2:%d,C2H5OH:%d,VOC:%d,CO:%d\n", NO2, C2H5OH, VOC, CO);
-    delay(100);
+    // USBSerial.printf("NO2:%d,C2H5OH:%d,VOC:%d,CO:%d\n", NO2, C2H5OH, VOC, CO);
+    delay(1000);
 }
 
 
