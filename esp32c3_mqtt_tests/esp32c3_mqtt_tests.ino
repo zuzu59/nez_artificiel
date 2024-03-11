@@ -2,7 +2,7 @@
 // brocker MQTT compatible Home Assistant avec un esp32-c3
 // et au passage graphe le senseur de gaz tout simplement 
 // sur le serial plotter tool de l'Arduino IDE
-// zf240311.1510
+// zf240311.1907
 //
 // Installation:
 // Pour MQTT, il faut installer la lib:
@@ -19,8 +19,11 @@
 // MQTT
 #include <ArduinoHA.h>
 #define DEVICE_NAME     "gazMulti"
-#define SENSOR_NAME1     "Uptime1"
-#define SENSOR_NAME2     "Uptime2"
+#define SENSOR_NAME1     "NO2"
+#define SENSOR_NAME2     "C2H5OH"
+#define SENSOR_NAME3     "VOC"
+#define SENSOR_NAME4     "CO"
+
 #define PUBLISH_INTERVAL  1000 // how often image should be published to HA (milliseconds)
 
 WiFiClient client;
@@ -29,8 +32,10 @@ HAMqtt mqtt(client, device);
 unsigned long lastUpdateAt = 0;
 
 // You should define your own ID.
-HASensorNumber uptimeSensor1(SENSOR_NAME1);           // c'est le nom du sensor sur MQTT !
-HASensorNumber uptimeSensor2(SENSOR_NAME2);           // c'est le nom du sensor sur MQTT !
+HASensorNumber Sensor1(SENSOR_NAME1);           // c'est le nom du sensor sur MQTT !
+HASensorNumber Sensor2(SENSOR_NAME2);           // c'est le nom du sensor sur MQTT !
+HASensorNumber Sensor3(SENSOR_NAME3);           // c'est le nom du sensor sur MQTT !
+HASensorNumber Sensor4(SENSOR_NAME4);           // c'est le nom du sensor sur MQTT !
 
 
 // Senseur de gaz
@@ -62,13 +67,21 @@ static void ConnectMQTT() {
     // device.setSoftwareVersion("1.0.0");
     mqtt.setDataPrefix(DEVICE_NAME);             // c'est le nom du device sur MQTT !
 
-    uptimeSensor1.setIcon("mdi:home");
-    uptimeSensor1.setName(SENSOR_NAME1);           // c'est le nom du sensor sur Home Assistant !
-    uptimeSensor1.setUnitOfMeasurement("s");
+    Sensor1.setIcon("mdi:smoke-detector-variant");
+    Sensor1.setName(SENSOR_NAME1);           // c'est le nom du sensor sur Home Assistant !
+    Sensor1.setUnitOfMeasurement("ppm");
 
-    uptimeSensor2.setIcon("mdi:home");
-    uptimeSensor2.setName(SENSOR_NAME2);           // c'est le nom du sensor sur Home Assistant !
-    uptimeSensor2.setUnitOfMeasurement("s");
+    Sensor2.setIcon("mdi:smoke-detector-variant");
+    Sensor2.setName(SENSOR_NAME2);           // c'est le nom du sensor sur Home Assistant !
+    Sensor2.setUnitOfMeasurement("ppm");
+
+    Sensor3.setIcon("mdi:smoke-detector-variant");
+    Sensor3.setName(SENSOR_NAME3);           // c'est le nom du sensor sur Home Assistant !
+    Sensor3.setUnitOfMeasurement("ppm");
+
+    Sensor4.setIcon("mdi:smoke-detector-variant");
+    Sensor4.setName(SENSOR_NAME4);           // c'est le nom du sensor sur Home Assistant !
+    Sensor4.setUnitOfMeasurement("ppm");
 
     mqtt.begin(BROKER_ADDR, BROKER_USERNAME, BROKER_PASSWORD);
     USBSerial.println("MQTT connected");
@@ -103,25 +116,23 @@ void setup() {
 }
 
 void loop() {
-    int NO2 = gas.measure_NO2();
-    int C2H5OH = gas.measure_C2H5OH(); 
-    int VOC = gas.measure_VOC(); 
-    int CO = gas.measure_CO(); 
+    unsigned long NO2 = gas.measure_NO2();
+    unsigned long C2H5OH = gas.measure_C2H5OH(); 
+    unsigned long VOC = gas.measure_VOC(); 
+    unsigned long CO = gas.measure_CO(); 
 
     mqtt.loop();
 
-    if ((millis() - lastUpdateAt) > 2000) { // update in 2s interval
-        unsigned long uptimeValue = millis() / 1000;
-        uptimeSensor1.setValue(uptimeValue);
-        uptimeSensor2.setValue(uptimeValue);        lastUpdateAt = millis();
-        // you can reset the sensor as follows:
-        // analogSensor.setValue(nullptr);
-    }
+    // unsigned long uptimeValue = millis() / 1000;
+    // zSensor1.setValue(uptimeValue);
 
-
+    Sensor1.setValue(NO2);
+    Sensor2.setValue(C2H5OH);
+    Sensor3.setValue(VOC);
+    Sensor4.setValue(CO);
 
     // Plot sur le serial plotter de l'Arduino IDE
     USBSerial.printf("NO2:%d,C2H5OH:%d,VOC:%d,CO:%d\n", NO2, C2H5OH, VOC, CO);
-    delay(1000);
+    delay(PUBLISH_INTERVAL);
 }
 
