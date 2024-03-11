@@ -1,7 +1,7 @@
 # nez_artificiel
 Création d'un petit nez artificiel *low cost* pour sentir pleins de trucs intéressants ;-)
 
-zf240226.1240
+zf240311.1414
 
 
 ## Buts
@@ -131,6 +131,8 @@ Ces 4 gaz ont été mesuré
 https://wiki.seeedstudio.com/Grove-Multichannel-Gas-Sensor-V2/
 
 https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background_gas_name/demo_background_gas_name.ino
+
+https://github.com/kartben/artificial-nose
 
 
 
