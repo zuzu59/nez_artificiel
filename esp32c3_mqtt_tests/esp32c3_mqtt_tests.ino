@@ -18,14 +18,20 @@
 
 // MQTT
 #include <ArduinoHA.h>
-#define BROKER_ADDR       IPAddress(192,168,0,42)
+#define DEVICE_NAME     "gazMulti"
+#define SENSOR_NAME1     "Uptime1"
+#define SENSOR_NAME2     "Uptime2"
 #define PUBLISH_INTERVAL  1000 // how often image should be published to HA (milliseconds)
+
 WiFiClient client;
-HADevice device;
-HAMqtt mqtt("client", device);
+HADevice device(DEVICE_NAME);                // c'est le IDS du device, il doit être unique !
+HAMqtt mqtt(client, device);
 unsigned long lastUpdateAt = 0;
-// "gazMulti" is unique ID of the sensor. You should define your own ID.
-HASensorNumber uptimeSensor("gazMulti");
+
+// You should define your own ID.
+HASensorNumber uptimeSensor1(SENSOR_NAME1);           // c'est le nom du sensor sur MQTT !
+HASensorNumber uptimeSensor2(SENSOR_NAME2);           // c'est le nom du sensor sur MQTT !
+
 
 // Senseur de gaz
 #include <Wire.h>
@@ -52,14 +58,20 @@ static void ConnectWiFi() {
 
 
 static void ConnectMQTT() {
-    // set device's details (optional)
-    device.setName("Arduino");
-    device.setSoftwareVersion("1.0.0");
-    // configure sensor (optional)
-    uptimeSensor.setIcon("mdi:home");
-    uptimeSensor.setName("gazMulti");
-    uptimeSensor.setUnitOfMeasurement("ppm");
-    mqtt.begin(BROKER_ADDR);
+   device.setName(DEVICE_NAME);                // c'est le nom du device sur Home Assistant !
+    // device.setSoftwareVersion("1.0.0");
+    mqtt.setDataPrefix(DEVICE_NAME);             // c'est le nom du device sur MQTT !
+
+    uptimeSensor1.setIcon("mdi:home");
+    uptimeSensor1.setName(SENSOR_NAME1);           // c'est le nom du sensor sur Home Assistant !
+    uptimeSensor1.setUnitOfMeasurement("s");
+
+    uptimeSensor2.setIcon("mdi:home");
+    uptimeSensor2.setName(SENSOR_NAME2);           // c'est le nom du sensor sur Home Assistant !
+    uptimeSensor2.setUnitOfMeasurement("s");
+
+    mqtt.begin(BROKER_ADDR, BROKER_USERNAME, BROKER_PASSWORD);
+    USBSerial.println("MQTT connected");
 }
 
 
@@ -100,8 +112,8 @@ void loop() {
 
     if ((millis() - lastUpdateAt) > 2000) { // update in 2s interval
         unsigned long uptimeValue = millis() / 1000;
-        // uptimeSensor.setValue(uptimeValue);
-        lastUpdateAt = millis();
+        uptimeSensor1.setValue(uptimeValue);
+        uptimeSensor2.setValue(uptimeValue);        lastUpdateAt = millis();
         // you can reset the sensor as follows:
         // analogSensor.setValue(nullptr);
     }
@@ -109,9 +121,7 @@ void loop() {
 
 
     // Plot sur le serial plotter de l'Arduino IDE
-    // USBSerial.printf("NO2:%d,C2H5OH:%d,VOC:%d,CO:%d\n", NO2, C2H5OH, VOC, CO);
+    USBSerial.printf("NO2:%d,C2H5OH:%d,VOC:%d,CO:%d\n", NO2, C2H5OH, VOC, CO);
     delay(1000);
 }
-
-
 
