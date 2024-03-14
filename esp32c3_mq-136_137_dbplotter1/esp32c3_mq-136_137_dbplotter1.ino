@@ -1,6 +1,8 @@
-// Simple tests du capteur de gaz sulfite MQ-136 pour voir comment l'interfacer avec mon nez électronique
-// Graphe aussi le résultat du senseur sur le display du smartphone avec DumbDisplay
-// zf240314.1427
+// Simple test du capteur de gaz MQ-136 (H2S sulfure d'hydrogène) et le MQ137 (NH3 ammoniac) 
+// pour voir comment l'interfacer avec mon nez électronique
+// Graphe aussi le résultat des senseurs sur le plotter de l'Arduino IDE ainsi que 
+// sur plotter du display du smartphone avec DumbDisplay
+// zf240314.1522
 //
 // Sources:
 // https://github.com/trevorwslee/Arduino-DumbDisplay/blob/master/samples/esp32c3ddblink/esp32c3ddblink.ino
@@ -13,6 +15,10 @@ int sensorPin1 = 0;   // select the input pin for the sensor 1
 int sensorValue1 = 0;  // variable to store the value coming from the sensor 1
 int sensorPin2 = 1;   // select the input pin for the sensor 2
 int sensorValue2 = 0;  // variable to store the value coming from the sensor 2
+int sensorPin3 = 2;   // select the input pin for the sensor 3
+int sensorValue3 = 0;  // variable to store the value coming from the sensor 3
+int sensorPin4 = 3;   // select the input pin for the sensor 4
+int sensorValue4 = 0;  // variable to store the value coming from the sensor 4
 
 
 // // DumbDisplay library
@@ -62,8 +68,10 @@ void loop() {
 
     sensorValue1 = analogRead(sensorPin1);
     sensorValue2 = analogRead(sensorPin2);
+    sensorValue3 = analogRead(sensorPin3);
+    sensorValue4 = analogRead(sensorPin4);
 
-    USBSerial.printf("Sensor1:%d,sensor2:%d\n", sensorValue1, sensorValue2);
+    USBSerial.printf("sensor1:%d,sensor2:%d,sensor3:%d,sensor4:%d\n", sensorValue1, sensorValue2, sensorValue3, sensorValue4);
 
 
 
@@ -76,6 +84,6 @@ void loop() {
     // lcd->setCursor(0, 1);
     // lcd->print(zString);
 
-    delay(1000);
+    delay(2000);
 }
 
