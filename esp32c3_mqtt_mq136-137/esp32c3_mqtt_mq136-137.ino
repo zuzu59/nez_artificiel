@@ -1,11 +1,10 @@
-// Juste un test pour voir comment envoyer des choses sur un 
-// brocker MQTT compatible Home Assistant avec un esp32-c3
-// et au passage graphe le senseur de gaz tout simplement 
-// sur le serial plotter tool de l'Arduino IDE
-// zf240311.1907
+// Simple test du capteur de gaz MQ-136 (H2S sulfure d'hydrogène) et le MQ137 (NH3 ammoniac) 
+// pour voir comment l'interfacer avec mon nez électronique
+// Envoie aussi le résultat des senseurs sur le mqtt pour home assistant
+// zf240314.1905
 //
 // Installation:
-// Pour MQTT, il faut installer la lib:
+// Pour MQTT, il faut installer la lib (home-assistant-integration):
 // https://github.com/dawidchyrzynski/arduino-home-assistant
 //
 // Sources:
@@ -18,13 +17,11 @@
 
 // MQTT
 #include <ArduinoHA.h>
-#define DEVICE_NAME     "gazMulti"
-#define SENSOR_NAME1     "NO2"
-#define SENSOR_NAME2     "C2H5OH"
-#define SENSOR_NAME3     "VOC"
-#define SENSOR_NAME4     "CO"
+#define DEVICE_NAME     "gazMQ136_137"
+#define SENSOR_NAME1     "H2S"
+#define SENSOR_NAME2     "NH3"
 
-#define PUBLISH_INTERVAL  5000 // how often image should be published to HA (milliseconds)
+#define PUBLISH_INTERVAL  1000 // how often image should be published to HA (milliseconds)
 
 WiFiClient client;
 HADevice device(DEVICE_NAME);                // c'est le IDS du device, il doit être unique !
@@ -34,14 +31,6 @@ unsigned long lastUpdateAt = 0;
 // You should define your own ID.
 HASensorNumber Sensor1(SENSOR_NAME1);           // c'est le nom du sensor sur MQTT !
 HASensorNumber Sensor2(SENSOR_NAME2);           // c'est le nom du sensor sur MQTT !
-HASensorNumber Sensor3(SENSOR_NAME3);           // c'est le nom du sensor sur MQTT !
-HASensorNumber Sensor4(SENSOR_NAME4);           // c'est le nom du sensor sur MQTT !
-
-
-// Senseur de gaz
-#include <Wire.h>
-#include <Multichannel_Gas_GMXXX.h>
-GAS_GMXXX<TwoWire> gas;
 
 
 static void ConnectWiFi() {
@@ -75,14 +64,6 @@ static void ConnectMQTT() {
     Sensor2.setName(SENSOR_NAME2);           // c'est le nom du sensor sur Home Assistant !
     Sensor2.setUnitOfMeasurement("ppm");
 
-    Sensor3.setIcon("mdi:smoke-detector-variant");
-    Sensor3.setName(SENSOR_NAME3);           // c'est le nom du sensor sur Home Assistant !
-    Sensor3.setUnitOfMeasurement("ppm");
-
-    Sensor4.setIcon("mdi:smoke-detector-variant");
-    Sensor4.setName(SENSOR_NAME4);           // c'est le nom du sensor sur Home Assistant !
-    Sensor4.setUnitOfMeasurement("ppm");
-
     mqtt.begin(BROKER_ADDR, BROKER_USERNAME, BROKER_PASSWORD);
     USBSerial.println("MQTT connected");
 }
@@ -90,14 +71,11 @@ static void ConnectMQTT() {
 
 
 
-static void Setting_Gaz_Sensor() {
-    Wire.begin(4, 5);     // J'ai branché mon sensor sur les pins 4 et 5 de mon esp32c3 !
-    // If you have changed the I2C address of gas sensor, you must to be specify the address of I2C.
-    //The default addrss is 0x08;
-    gas.begin(Wire, 0x08); // use the hardware I2C
-    //gas.begin(MyWire, 0x08); // use the software I2C
-    //gas.setAddress(0x64); change thee I2C address
-}
+int sensorPin1 = 1;   // select the input pin for the sensor 1
+int sensorValue1 = 0;  // variable to store the value coming from the sensor 1
+int sensorPin2 = 3;   // select the input pin for the sensor 2
+int sensorValue2 = 0;  // variable to store the value coming from the sensor 2
+
 
 void setup() {
     USBSerial.begin(19200);
@@ -108,31 +86,25 @@ void setup() {
     USBSerial.println("\n\nConnect WIFI !\n");
     ConnectWiFi();
 
-    USBSerial.println("\n\nConnect MQTT !\n");
-    ConnectMQTT();
+    // USBSerial.println("\n\nConnect MQTT !\n");
+    // ConnectMQTT();
 
-    USBSerial.println("\n\nSetting gaz sensor !\n");
-    Setting_Gaz_Sensor();
+    USBSerial.println("C'est parti !\n");
 }
 
+
 void loop() {
-    unsigned long NO2 = gas.measure_NO2();
-    unsigned long C2H5OH = gas.measure_C2H5OH(); 
-    unsigned long VOC = gas.measure_VOC(); 
-    unsigned long CO = gas.measure_CO(); 
 
-    mqtt.loop();
+    sensorValue1 = analogRead(sensorPin1);
+    sensorValue2 = analogRead(sensorPin2);
 
-    // unsigned long uptimeValue = millis() / 1000;
-    // zSensor1.setValue(uptimeValue);
 
-    Sensor1.setValue(NO2);
-    Sensor2.setValue(C2H5OH);
-    Sensor3.setValue(VOC);
-    Sensor4.setValue(CO);
+    USBSerial.printf("sensor1:%d,sensor2:%d\n", sensorValue1, sensorValue2);
 
-    // Plot sur le serial plotter de l'Arduino IDE
-    USBSerial.printf("NO2:%d,C2H5OH:%d,VOC:%d,CO:%d\n", NO2, C2H5OH, VOC, CO);
-    delay(PUBLISH_INTERVAL);
+
+
+
+
+    delay(2000);
 }
 
