@@ -1,7 +1,7 @@
 // Simple test du capteur de gaz MQ-136 (H2S sulfure d'hydrogène) et le MQ137 (NH3 ammoniac) 
 // pour voir comment l'interfacer avec mon nez électronique
 // Envoie aussi le résultat des senseurs sur le mqtt pour home assistant
-// zf240315.1450
+// zf240315.1514
 //
 // Installation:
 // Pour MQTT, il faut installer la lib (home-assistant-integration):
@@ -21,7 +21,7 @@
 #define SENSOR_NAME1     "H2S"
 #define SENSOR_NAME2     "NH3"
 
-#define PUBLISH_INTERVAL  1000 // how often image should be published to HA (milliseconds)
+#define PUBLISH_INTERVAL  5000 // how often image should be published to HA (milliseconds)
 
 WiFiClient client;
 HADevice device(DEVICE_NAME);                // c'est le IDS du device, il doit être unique !
@@ -75,9 +75,9 @@ static void ConnectMQTT() {
 
 
 int sensorPin1 = 1;   // select the input pin for the sensor 1
-int sensorValue1 = 0;  // variable to store the value coming from the sensor 1
+long sensorValue1 = 0;  // variable to store the value coming from the sensor 1
 int sensorPin2 = 3;   // select the input pin for the sensor 2
-int sensorValue2 = 0;  // variable to store the value coming from the sensor 2
+long sensorValue2 = 0;  // variable to store the value coming from the sensor 2
 
 
 void setup() {
@@ -90,24 +90,23 @@ void setup() {
     USBSerial.println("Connect WIFI !");
     ConnectWiFi();
 
-    // USBSerial.println("\n\nConnect MQTT !\n");
-    // ConnectMQTT();
+    USBSerial.println("\n\nConnect MQTT !\n");
+    ConnectMQTT();
 
     USBSerial.println("C'est parti !\n");
 }
 
 
 void loop() {
-
     sensorValue1 = analogRead(sensorPin1);
     sensorValue2 = analogRead(sensorPin2);
 
+    mqtt.loop();
+
+    Sensor1.setValue(sensorValue1);
+    Sensor2.setValue(sensorValue2);
 
     USBSerial.printf("sensor1:%d,sensor2:%d\n", sensorValue1, sensorValue2);
-
-
-
-
 
     delay(PUBLISH_INTERVAL);
 }
