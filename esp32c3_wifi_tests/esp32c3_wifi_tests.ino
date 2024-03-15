@@ -19,9 +19,16 @@ GAS_GMXXX<TwoWire> gas;
 
 static void ConnectWiFi() {
     USBSerial.printf("WIFI_SSID: %s\nWIFI_PASSWORD: %s\n", WIFI_SSID, WIFI_PASSWORD);
-    WiFi.mode(WIFI_STA); //Optional
+    // WiFi.mode(WIFI_STA); //Optional
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    WiFi.setSleep(false);
+    //********* cette partie est pour le Lolin esp32-c3 mini V1 !
+    //https://github.com/espressif/arduino-esp32/issues/6430.  voir à la fin la raison
+    WiFi.setTxPower(WIFI_POWER_8_5dBm);
+    int txPower = WiFi.getTxPower();
+    USBSerial.print("TX power: ");
+    USBSerial.println(txPower);
+    //*********
+    // WiFi.setSleep(false);
     USBSerial.println("\nConnecting");
     while(WiFi.status() != WL_CONNECTED){
         USBSerial.print(".");
@@ -43,6 +50,8 @@ static void Setting_Gaz_Sensor() {
 
 void setup() {
     USBSerial.begin(19200);
+    USBSerial.setDebugOutput(true);       //pour voir les messages de debug sur la console série !
+
     delay(3000);  //le temps de passer sur la Serial Monitor ;-)
     USBSerial.println("\n\n\n\nCa commence !\n");
     delay(2000);  //le temps de passer sur la Serial Monitor ;-)
@@ -50,7 +59,7 @@ void setup() {
     USBSerial.println("\n\nConnect WIFI !\n");
     ConnectWiFi();
 
-    USBSerial.println("\n\n\n\nSetting gaz sensor !\n");
+    USBSerial.println("\n\nSetting gaz sensor !\n");
     Setting_Gaz_Sensor();
 }
 
