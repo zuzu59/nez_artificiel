@@ -1,14 +1,15 @@
 // Simple test du capteur de gaz MQ-136 (H2S sulfure d'hydrogène) et le MQ137 (NH3 ammoniac) 
 // pour voir comment l'interfacer avec mon nez électronique
 // Envoie aussi le résultat des senseurs sur le mqtt pour home assistant
-// zf240315.1651
+// zf240315.1658
 //
 // Installation:
 // Pour MQTT, il faut installer la lib (home-assistant-integration):
 // https://github.com/dawidchyrzynski/arduino-home-assistant
 //
 // Sources:
-// https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background/demo_background.ino
+// https://www.winsen-sensor.com/d/files/semiconductor/mq136.pdf
+// https://www.winsen-sensor.com/d/files/semiconductor/mq137.pdf
 // https://github.com/dawidchyrzynski/arduino-home-assistant/blob/main/examples/sensor-integer/sensor-integer.ino
 
 // WIFI
