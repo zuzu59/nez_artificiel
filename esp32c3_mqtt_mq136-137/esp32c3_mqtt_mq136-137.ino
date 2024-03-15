@@ -1,7 +1,7 @@
 // Simple test du capteur de gaz MQ-136 (H2S sulfure d'hydrogène) et le MQ137 (NH3 ammoniac) 
 // pour voir comment l'interfacer avec mon nez électronique
 // Envoie aussi le résultat des senseurs sur le mqtt pour home assistant
-// zf240315.1514
+// zf240315.1651
 //
 // Installation:
 // Pour MQTT, il faut installer la lib (home-assistant-integration):
@@ -21,7 +21,7 @@
 #define SENSOR_NAME1     "H2S"
 #define SENSOR_NAME2     "NH3"
 
-#define PUBLISH_INTERVAL  5000 // how often image should be published to HA (milliseconds)
+#define PUBLISH_INTERVAL  4000 // how often image should be published to HA (milliseconds)
 
 WiFiClient client;
 HADevice device(DEVICE_NAME);                // c'est le IDS du device, il doit être unique !
@@ -52,26 +52,22 @@ static void ConnectWiFi() {
 }
 
 
-
-
 static void ConnectMQTT() {
    device.setName(DEVICE_NAME);                // c'est le nom du device sur Home Assistant !
     // device.setSoftwareVersion("1.0.0");
     mqtt.setDataPrefix(DEVICE_NAME);             // c'est le nom du device sur MQTT !
 
-    Sensor1.setIcon("mdi:smoke-detector-variant");
+    Sensor1.setIcon("mdi:radiator");
     Sensor1.setName(SENSOR_NAME1);           // c'est le nom du sensor sur Home Assistant !
     Sensor1.setUnitOfMeasurement("ppm");
 
-    Sensor2.setIcon("mdi:smoke-detector-variant");
+    Sensor2.setIcon("mdi:radiator");
     Sensor2.setName(SENSOR_NAME2);           // c'est le nom du sensor sur Home Assistant !
     Sensor2.setUnitOfMeasurement("ppm");
 
     mqtt.begin(BROKER_ADDR, BROKER_USERNAME, BROKER_PASSWORD);
     USBSerial.println("MQTT connected");
 }
-
-
 
 
 int sensorPin1 = 1;   // select the input pin for the sensor 1
@@ -85,10 +81,16 @@ void setup() {
     USBSerial.setDebugOutput(true);       //pour voir les messages de debug sur la console série !
     delay(3000);  //le temps de passer sur la Serial Monitor ;-)
     USBSerial.println("\n\n\n\n**************************************\nCa commence !\n");
-    // delay(2000);  //le temps de passer sur la Serial Monitor ;-)
+
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500); 
+    digitalWrite(LED_BUILTIN, LOW);
 
     USBSerial.println("Connect WIFI !");
     ConnectWiFi();
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500); 
 
     USBSerial.println("\n\nConnect MQTT !\n");
     ConnectMQTT();
@@ -98,6 +100,10 @@ void setup() {
 
 
 void loop() {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100); 
+    digitalWrite(LED_BUILTIN, LOW);
+
     sensorValue1 = analogRead(sensorPin1);
     sensorValue2 = analogRead(sensorPin2);
 
