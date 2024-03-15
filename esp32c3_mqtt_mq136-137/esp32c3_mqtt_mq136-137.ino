@@ -1,7 +1,7 @@
 // Simple test du capteur de gaz MQ-136 (H2S sulfure d'hydrogène) et le MQ137 (NH3 ammoniac) 
 // pour voir comment l'interfacer avec mon nez électronique
 // Envoie aussi le résultat des senseurs sur le mqtt pour home assistant
-// zf240314.1905
+// zf240314.2000
 //
 // Installation:
 // Pour MQTT, il faut installer la lib (home-assistant-integration):
@@ -83,8 +83,8 @@ void setup() {
     USBSerial.println("\n\n\n\nCa commence !\n");
     delay(2000);  //le temps de passer sur la Serial Monitor ;-)
 
-    USBSerial.println("\n\nConnect WIFI !\n");
-    ConnectWiFi();
+    // USBSerial.println("\n\nConnect WIFI !\n");
+    // ConnectWiFi();
 
     // USBSerial.println("\n\nConnect MQTT !\n");
     // ConnectMQTT();
@@ -105,6 +105,6 @@ void loop() {
 
 
 
-    delay(2000);
+    delay(PUBLISH_INTERVAL);
 }
 
