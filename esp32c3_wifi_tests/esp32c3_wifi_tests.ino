@@ -1,6 +1,6 @@
 // Juste un test pour voir comment se connecter en WIFI avec un esp32-c3
 // et au passage Graphe tout simplement sur le serial plotter tool de l'Arduino IDE
-// zf240311.1546
+// zf240315.1450
 //
 // Sources:
 // https://github.com/Seeed-Studio/Seeed_Arduino_MultiGas/blob/master/examples/demo_background/demo_background.ino
@@ -21,14 +21,10 @@ static void ConnectWiFi() {
     USBSerial.printf("WIFI_SSID: %s\nWIFI_PASSWORD: %s\n", WIFI_SSID, WIFI_PASSWORD);
     // WiFi.mode(WIFI_STA); //Optional
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    //********* cette partie est pour le Lolin esp32-c3 mini V1 !
-    //https://github.com/espressif/arduino-esp32/issues/6430.  voir à la fin la raison
-    WiFi.setTxPower(WIFI_POWER_8_5dBm);
+    WiFi.setTxPower(WIFI_POWER_8_5dBm);  //c'est pour le Lolin esp32-c3 mini V1 ! https://www.wemos.cc/en/latest/c3/c3_mini_1_0_0.html
     int txPower = WiFi.getTxPower();
     USBSerial.print("TX power: ");
     USBSerial.println(txPower);
-    //*********
-    // WiFi.setSleep(false);
     USBSerial.println("\nConnecting");
     while(WiFi.status() != WL_CONNECTED){
         USBSerial.print(".");
