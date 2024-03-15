@@ -1,7 +1,7 @@
 // Simple test du capteur de gaz MQ-136 (H2S sulfure d'hydrogène) et le MQ137 (NH3 ammoniac) 
 // pour voir comment l'interfacer avec mon nez électronique
 // Envoie aussi le résultat des senseurs sur le mqtt pour home assistant
-// zf240314.2000
+// zf240315.1450
 //
 // Installation:
 // Pour MQTT, il faut installer la lib (home-assistant-integration):
@@ -37,8 +37,11 @@ static void ConnectWiFi() {
     USBSerial.printf("WIFI_SSID: %s\nWIFI_PASSWORD: %s\n", WIFI_SSID, WIFI_PASSWORD);
     WiFi.mode(WIFI_STA); //Optional
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    WiFi.setSleep(false);
-    USBSerial.println("\nConnecting");
+    WiFi.setTxPower(WIFI_POWER_8_5dBm);  //c'est pour le Lolin esp32-c3 mini V1 ! https://www.wemos.cc/en/latest/c3/c3_mini_1_0_0.html
+    int txPower = WiFi.getTxPower();
+    USBSerial.print("TX power: ");
+    USBSerial.println(txPower);
+    USBSerial.println("Connecting");
     while(WiFi.status() != WL_CONNECTED){
         USBSerial.print(".");
         delay(100);
@@ -79,12 +82,13 @@ int sensorValue2 = 0;  // variable to store the value coming from the sensor 2
 
 void setup() {
     USBSerial.begin(19200);
+    USBSerial.setDebugOutput(true);       //pour voir les messages de debug sur la console série !
     delay(3000);  //le temps de passer sur la Serial Monitor ;-)
-    USBSerial.println("\n\n\n\nCa commence !\n");
-    delay(2000);  //le temps de passer sur la Serial Monitor ;-)
+    USBSerial.println("\n\n\n\n**************************************\nCa commence !\n");
+    // delay(2000);  //le temps de passer sur la Serial Monitor ;-)
 
-    // USBSerial.println("\n\nConnect WIFI !\n");
-    // ConnectWiFi();
+    USBSerial.println("Connect WIFI !");
+    ConnectWiFi();
 
     // USBSerial.println("\n\nConnect MQTT !\n");
     // ConnectMQTT();
